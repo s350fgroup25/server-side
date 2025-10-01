@@ -1,14 +1,87 @@
 <!DOCTYPE html>
-<html>
-<head><title>Add Item</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Item</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
 <body>
-  <h1>Add New Item</h1>
-  <form action="/add" method="POST">
-    <label>Item Name: <input type="text" name="name" required></label><br/>
-    <label>Quantity: <input type="number" name="quantity" required></label><br/>
-    <button type="submit">Add</button>
-  </form>
-  <a href="/">Back to Inventory</a>
-  <a href="/logout">Logout</a>
+  <main class="paper">
+    <h1>Add Item</h1>
+    <form action="/add" method="POST" novalidate>
+      <input type="text" name="name" required placeholder="Name">
+      <input type="number" name="quantity" required placeholder="Quantity">
+      <div class="actions">
+        <button type="submit" class="btn">Add</button>
+        <button type="button" class="btn" id="gen-5">just give me random 5</button>
+        <a class="btn" href="/">Back</a>
+        <a class="btn" href="/logout">Logout</a>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    (function () {
+      const btn = document.getElementById('gen-5');
+      if (!btn) return;
+
+      const adjectives = [
+        'Red','Blue','Green','Golden','Silver','Black','White','Purple',
+        'Fast','Slow','New','Old','Big','Small','Hot','Cold',
+        'Sharp','Bright','Heavy','Light'
+      ];
+
+      const nouns = [
+        'Apple','Banana','Screw','Notebook','Cup','Box','Mouse','Keyboard',
+        'Battery','Headphone','Gum','Sticker','Pencil','Sponge','Nut','Cookie',
+        'Book','Table','Chair','Bottle','Phone','Bag','Lamp','Coin','Knife'
+      ];
+
+      const randomName = () => {
+        const a = adjectives[Math.floor(Math.random() * adjectives.length)];
+        const n = nouns[Math.floor(Math.random() * nouns.length)];
+        return a + n;
+      };
+      const randomQty = () => Math.floor(Math.random() * 1000) + 1; // 1..1000
+
+      const postItem = async (name, quantity) => {
+        const body = new URLSearchParams({ name, quantity }).toString();
+        const res = await fetch('/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body,
+          credentials: 'same-origin'
+        });
+        return res.ok;
+      };
+
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        const t = btn.textContent;
+        btn.textContent = 'Generating';
+
+        let allOk = true;
+        try {
+          for (let i = 0; i < 5; i++) {
+            const ok = await postItem(randomName(), randomQty());
+            if (!ok) allOk = false;
+          }
+        } catch (e) {
+          allOk = false;
+          console.error(e);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = t;
+        }
+
+        if (allOk) {
+          location.href = '/';
+        } else {
+          alert('Something wrong');
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
