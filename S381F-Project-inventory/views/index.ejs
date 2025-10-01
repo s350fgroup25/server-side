@@ -4,6 +4,15 @@
 <body>
   <h1>Welcome <%= user %>!</h1>
   <a href="/logout">Logout</a> | <a href="/add">Add New Item</a>
+  
+  <form method="GET" action="/">
+    <input name="q" value="<%= q || '' %>" placeholder="Keywords">
+    <input type="number" name="min" value="<%= min || '' %>" placeholder="Min Quantity">
+    <input type="number" name="max" value="<%= max || '' %>" placeholder="Max Quantity">
+    <button type="submit">Search</button>
+    <a href="/">Reset</a>
+  </form>
+
   <h2>Inventory List</h2>
   <ul>
     <% items.forEach(item => { %>
