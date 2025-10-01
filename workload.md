@@ -36,16 +36,16 @@
     實作 CRUD 操作的 Web 路由。
     為 RESTful CRUD 服務實作 API 路由。
     使用EJS渲染登入、CRUD頁面
-#### 建立基本文件結構
+#### 1. 建立基本文件結構
     mkdir views public
     touch server.js README.md
-#### 基本伺服器設定（server.js）
-#### 創建EJS模板 
+#### 2. 基本伺服器設定（server.js）
+#### 3. 創建EJS模板 
     - views/login.ejs
     - views/index.ejs
     - views/add.ejs
     - views/edit.ejs
-#### 創建README.md 
+#### 4. 創建README.md 
  
 
 
