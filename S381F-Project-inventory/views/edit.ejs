@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Edit Item</title></head>
+<body>
+  <h1>Edit Item</h1>
+  <form action="/edit/<%= item._id %>" method="POST">
+    <label>Item Name: <input type="text" name="name" value="<%= item.name %>" required></label><br/>
+    <label>Quantity: <input type="number" name="quantity" value="<%= item.quantity %>" required></label><br/>
+    <button type="submit">Save</button>
+  </form>
+  <a href="/">Back to Inventory</a>
+</body>
+</html>
+

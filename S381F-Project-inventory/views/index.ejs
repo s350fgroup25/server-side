@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Inventory</title></head>
+<body>
+  <h1>Welcome <%= user %>!</h1>
+  <a href="/logout">Logout</a> | <a href="/add">Add New Item</a>
+  <h2>Inventory List</h2>
+  <ul>
+    <% items.forEach(item => { %>
+      <li>
+        <%= item.name %> - Quantity: <%= item.quantity %> 
+        [<a href="/edit/<%= item._id %>">Edit</a>]
+        [<a href="/delete/<%= item._id %>">Delete</a>]
+      </li>
+    <% }); %>
+  </ul>
+</body>
+</html>
