@@ -1,0 +1,20 @@
+{
+  "name": "s381f-project-inventory",
+  "version": "1.0.0",
+  "description": "S381F-Project-inventory/ \t├── server.js  (main server) \t├── package.json \t├── public/    (static files like CSS, JS if needed) \t├── views/     (EJS templates) \t├── models/    (MongoDB schema files if used) \t└── README.md  (project info and instructions) # Inventory Management System (COMP S381F) - Group 20 :  - 13140568 Yu Ching Ting  - 13548875 - 13649730 - 13515174 ## Description A simple Inventory Management System using Node.js, Express.js, MongoDB, and EJS. It supports user login/logout, item CRUD operations, and session management.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cookie-session": "^2.1.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongodb": "^6.20.0"
+  }
+}
