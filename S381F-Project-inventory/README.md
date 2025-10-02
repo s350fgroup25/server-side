@@ -8,7 +8,7 @@
 	└── README.md  (project info and instructions)
 # Inventory Management System (COMP S381F)
 - Group 20 : 
-- 13140568 Yu Ching Ting 
+- 13140568
 - 13548875
 - 13649730
 - 13515174
