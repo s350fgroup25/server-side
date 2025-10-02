@@ -6,7 +6,7 @@
   <title>Edit Item</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body class="fade-root">
   <main class="paper">
     <h1>Edit Item</h1>
     <form action="/edit/<%= item._id %>" method="POST" novalidate>
@@ -23,5 +23,6 @@
       </div>
     </form>
   </main>
+  <script src="/js/pagefx.js"></script>
 </body>
 </html>

@@ -133,12 +133,18 @@ input:focus{
 .input:focus{ border-color:#8ba3ff; box-shadow: 0 0 0 3px rgba(122,162,255,0.20); background:#fff }
 ul.items{ list-style:none; padding:0; margin:10px 0 0 0 }
 ul.items li{
+  color:#0c1222;
   border:1px solid #eceff6;
   border-radius:12px;
   padding:12px 14px;
   margin-bottom:10px;
   display:flex; align-items:center; justify-content:space-between; gap:12px;
   background:#fff;
+}
+ul.items li > div {
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 .item-meta{ color:#475166 }
 .link{ color:#3740ff; text-decoration:none }
@@ -154,3 +160,9 @@ ul.items li{
   font-size:14px;
 }
 footer{ margin-top:16px; color:var(--muted); font-size:12px; text-align:center }
+
+
+body.fade-root{ opacity:0 }
+body.fade-root.is-ready{ opacity:1; transition: opacity .1s ease-out }
+body.fade-root.is-leaving{ opacity:0 }
+body.fade-root.is-leaving *{ pointer-events:none !important }
