@@ -43,7 +43,7 @@
           <li
             data-dis-type="simultaneous"
             data-dis-particle-type="WindParticle"
-            data-dis-reduction-factor="28">
+            data-dis-reduction-factor="50">
             <div>
               <div><strong><%= item.name %></strong></div>
               <div class="item-meta">Quantity：<%= item.quantity %></div>
@@ -59,6 +59,41 @@
           </li>
         <% }); %>
       </ul>
+
+      <% 
+        const P = Number(page || 1);
+        const L = Number(limit || 50);
+        const total = typeof totalCount !== 'undefined' ? Number(totalCount) : (items ? items.length : 0);
+        const pages = Math.max(1, Math.ceil(total / L));
+        function qs(p) {
+          return '/?q=' + encodeURIComponent(q || '') +
+                 '&min=' + (min || '') +
+                 '&max=' + (max || '') +
+                 '&page=' + p;
+        }
+      %>
+
+      <% if (pages > 1) { %>
+        <nav class="actions" aria-label="pagination" style="margin-top:12px; gap:6px; display:flex; flex-wrap:wrap;">
+          <% if (P > 1) { %>
+            <a class="btn" href="<%= qs(P - 1) %>">上一頁</a>
+          <% } else { %>
+            <span class="btn disabled">上一頁</span>
+          <% } %>
+
+          <% for (let i = 1; i <= pages; i++) { %>
+            <a class="btn <%= i === P ? 'primary' : '' %>" href="<%= qs(i) %>">
+              <%= i === P ? ('[' + i + ']') : i %>
+            </a>
+          <% } %>
+
+          <% if (P < pages) { %>
+            <a class="btn" href="<%= qs(P + 1) %>">下一頁</a>
+          <% } else { %>
+            <span class="btn disabled">下一頁</span>
+          <% } %>
+        </nav>
+      <% } %>
     </section>
   </main>
 

@@ -6,12 +6,12 @@
     this._initOnce = false;
     this.draw = function(ctx, percent){
       if(!this._initOnce){
-        this.size = 3;
+        this.size = 10;
         this.wind = 10 + Math.random() * 25;
         this.lift = 20 + Math.random() * 20;
         this.swing = Math.random() * 6 + 3;
         this.freq = Math.random() * 6 + 3;
-        this.fade = 0.85 + Math.random() * 0.25;
+        this.fade = 0.50 + Math.random() * 0.50;
         this.seed = Math.random() * Math.PI * 2;
         this._initOnce = true;
       }

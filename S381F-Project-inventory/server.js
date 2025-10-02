@@ -71,16 +71,27 @@ app.get('/logout', (req, res) => {
 });
 
 // Home page with inventory list
+// GET /
 app.get('/', checkAuth, async (req, res) => {
-  const { q = '', min, max } = req.query;
+  const { q = '', min, max, page = 1, limit = 30 } = req.query;
   const filter = {};
   if (q) filter.name = { $regex: q, $options: 'i' };
   if (min || max) filter.quantity = {};
   if (min) filter.quantity.$gte = parseInt(min, 10);
   if (max) filter.quantity.$lte = parseInt(max, 10);
-  const items = await itemsCollection.find(filter).toArray();
-  res.render('index', { user: req.session.user, items, q, min, max });
+
+  const p = Math.max(parseInt(page, 10) || 1, 1);
+  const L = Math.min(parseInt(limit, 10) || 30, 200);
+  const skip = (p - 1) * L;
+
+  const [items, totalCount] = await Promise.all([
+    itemsCollection.find(filter).skip(skip).limit(L).toArray(),
+    itemsCollection.countDocuments(filter)
+  ]);
+
+  res.render('index', { user: req.session.user, items, q, min, max, page: p, limit: L, totalCount });
 });
+
 
 // Add new item form
 app.get('/add', checkAuth, (req, res) => {
