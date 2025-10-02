@@ -10,8 +10,12 @@
   <main class="paper">
     <h1>Add Item</h1>
     <form action="/add" method="POST" novalidate>
-      <input type="text" name="name" required placeholder="Name">
-      <input type="number" name="quantity" required placeholder="Quantity">
+      <label>Name
+        <input type="text" name="name" required placeholder="Name">
+      </label>
+      <label>Quantity
+        <input type="number" name="quantity" required placeholder="Quantity">
+      </label>
       <div class="actions">
         <button type="submit" class="btn">Add</button>
         <button type="button" class="btn" id="gen-5">just give me random 5</button>
