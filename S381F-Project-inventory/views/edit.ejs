@@ -1,14 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head><title>Edit Item</title></head>
-<body>
-  <h1>Edit Item</h1>
-  <form action="/edit/<%= item._id %>" method="POST">
-    <label>Item Name: <input type="text" name="name" value="<%= item.name %>" required></label><br/>
-    <label>Quantity: <input type="number" name="quantity" value="<%= item.quantity %>" required></label><br/>
-    <button type="submit">Save</button>
-  </form>
-  <a href="/">Back to Inventory</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Item</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="fade-root">
+  <main class="paper">
+    <h1>Edit Item</h1>
+    <form action="/edit/<%= item._id %>" method="POST" novalidate>
+      <label>Name
+        <input type="text" name="name" value="<%= item.name %>" required>
+      </label>
+      <label>Quantity
+        <input type="number" name="quantity" value="<%= item.quantity %>" required>
+      </label>
+      <div class="actions">
+        <button type="submit" class="btn">Save</button>
+        <a class="btn" href="/">Back</a>
+        <a class="btn" href="/logout">Logout</a>
+      </div>
+    </form>
+  </main>
+  <script src="/js/pagefx.js"></script>
 </body>
 </html>
-

@@ -10,6 +10,7 @@ A simple Inventory Management System using Node.js, Express.js, MongoDB, and EJS
 - EJS Template Engine
 - cookie-session
 - body-parser
+- Disintegrate.js + custom JS (for UI effects)
 
 ## Installation and Setup
 #### 1. Make sure MongoDB server is installed and running:
@@ -27,6 +28,10 @@ A simple Inventory Management System using Node.js, Express.js, MongoDB, and EJS
 ## Usage
 - Login with username `admin` and password `password`.
 - Add, edit, and delete inventory items.
+- - Manage items:
+  - Create, Edit, Delete
+  - Search by keyword or quantity range
+  - Bulk-generate random 5 or 100 items
 - Logout using the "Logout" link.
 
 ## Notes
