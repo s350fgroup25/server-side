@@ -5,16 +5,18 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
-const port = 3000; // or any port you like
-const mongoUrl = 'mongodb://localhost:27017';
-const dbName = 'inventoryDB';
+const port = process.env.PORT || 3000;
+const mongoUrl = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
+const dbName = process.env.DB_NAME || 'inventoryDB';
 
 let db, itemsCollection;
 
 // Middleware setup
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+app.use(require('express').static('public'));
 app.use(cookieSession({
   name: 'session',
   keys: ['secretKeyHere'],
@@ -69,10 +71,27 @@ app.get('/logout', (req, res) => {
 });
 
 // Home page with inventory list
+// GET /
 app.get('/', checkAuth, async (req, res) => {
-  const items = await itemsCollection.find().toArray();
-  res.render('index', { user: req.session.user, items });
+  const { q = '', min, max, page = 1, limit = 30 } = req.query;
+  const filter = {};
+  if (q) filter.name = { $regex: q, $options: 'i' };
+  if (min || max) filter.quantity = {};
+  if (min) filter.quantity.$gte = parseInt(min, 10);
+  if (max) filter.quantity.$lte = parseInt(max, 10);
+
+  const p = Math.max(parseInt(page, 10) || 1, 1);
+  const L = Math.min(parseInt(limit, 10) || 30, 200);
+  const skip = (p - 1) * L;
+
+  const [items, totalCount] = await Promise.all([
+    itemsCollection.find(filter).skip(skip).limit(L).toArray(),
+    itemsCollection.countDocuments(filter)
+  ]);
+
+  res.render('index', { user: req.session.user, items, q, min, max, page: p, limit: L, totalCount });
 });
+
 
 // Add new item form
 app.get('/add', checkAuth, (req, res) => {
@@ -106,4 +125,43 @@ app.get('/delete/:id', checkAuth, async (req, res) => {
   const id = req.params.id;
   await itemsCollection.deleteOne({ _id: new ObjectId(id) });
   res.redirect('/');
+});
+
+
+// =============== RESTful API ===============
+
+// Read all
+app.get('/api/items', async (req, res) => {
+  const items = await itemsCollection.find().toArray();
+  res.json(items);
+});
+
+// Read one
+app.get('/api/items/:id', async (req, res) => {
+  const item = await itemsCollection.findOne({ _id: new ObjectId(req.params.id) });
+  if (!item) return res.status(404).json({ error: 'Not found' });
+  res.json(item);
+});
+
+// Create
+app.post('/api/items', async (req, res) => {
+  const { name, quantity } = req.body;
+  const result = await itemsCollection.insertOne({ name, quantity: parseInt(quantity) });
+  res.status(201).json({ _id: result.insertedId, name, quantity });
+});
+
+// Update
+app.put('/api/items/:id', async (req, res) => {
+  const { name, quantity } = req.body;
+  const result = await itemsCollection.updateOne(
+    { _id: new ObjectId(req.params.id) },
+    { $set: { name, quantity: parseInt(quantity) } }
+  );
+  res.json({ modifiedCount: result.modifiedCount });
+});
+
+// Delete
+app.delete('/api/items/:id', async (req, res) => {
+  const result = await itemsCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+  res.json({ deletedCount: result.deletedCount });
 });

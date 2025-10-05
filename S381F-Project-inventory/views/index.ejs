@@ -1,18 +1,108 @@
 <!DOCTYPE html>
-<html>
-<head><title>Inventory</title></head>
-<body>
-  <h1>Welcome <%= user %>!</h1>
-  <a href="/logout">Logout</a> | <a href="/add">Add New Item</a>
-  <h2>Inventory List</h2>
-  <ul>
-    <% items.forEach(item => { %>
-      <li>
-        <%= item.name %> - Quantity: <%= item.quantity %> 
-        [<a href="/edit/<%= item._id %>">Edit</a>]
-        [<a href="/delete/<%= item._id %>">Delete</a>]
-      </li>
-    <% }); %>
-  </ul>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inventory</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="fade-root">
+  <main class="paper">
+    <div class="topbar">
+      <div class="md">
+        <h1>Inventory List</h1>
+        <p>Welcome，<strong><%= user %></strong></p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/add">Add</a>
+        <a class="btn" href="/logout">Logout</a>
+      </div>
+    </div>
+
+    <section class="md">
+      <h2>Read</h2>
+      <form class="query-form" method="GET" action="/">
+        <input class="input" name="q" value="<%= q || '' %>" placeholder="Keywords">
+        <input class="input" type="number" name="min" value="<%= min || '' %>" placeholder="Min">
+        <input class="input" type="number" name="max" value="<%= max || '' %>" placeholder="Max">
+        <button class="btn" type="submit">Search</button>
+        <a class="btn" href="/">Reset</a>
+      </form>
+
+      <div class="sep"></div>
+
+      <h2>
+        List
+        <%= (items && items.length) || 0 %>
+        <% if (typeof totalCount !== 'undefined') { %>/<%= totalCount %><% } %>
+        Items
+      </h2>
+
+      <ul class="items">
+        <% items.forEach(item => { %>
+          <li
+            data-dis-type="simultaneous"
+            data-dis-particle-type="WindParticle"
+            data-dis-reduction-factor="50">
+            <div>
+              <div><strong><%= item.name %></strong></div>
+              <div class="item-meta">Quantity：<%= item.quantity %></div>
+            </div>
+            <div>
+              <div class="actions">
+                <a class="btn" href="/edit/<%= item._id %>">Edit</a>
+              </div>
+              <div class="actions">
+                <a class="btn" href="/delete/<%= item._id %>">Delete</a>
+              </div>
+            </div>
+          </li>
+        <% }); %>
+      </ul>
+
+      <% 
+        const P = Number(page || 1);
+        const L = Number(limit || 50);
+        const total = typeof totalCount !== 'undefined' ? Number(totalCount) : (items ? items.length : 0);
+        const pages = Math.max(1, Math.ceil(total / L));
+        function qs(p) {
+          return '/?q=' + encodeURIComponent(q || '') +
+                 '&min=' + (min || '') +
+                 '&max=' + (max || '') +
+                 '&page=' + p;
+        }
+      %>
+
+      <% if (pages > 1) { %>
+        <nav class="actions" aria-label="pagination" style="margin-top:12px; gap:6px; display:flex; flex-wrap:wrap;">
+          <% if (P > 1) { %>
+            <a class="btn" href="<%= qs(P - 1) %>">上一頁</a>
+          <% } else { %>
+            <span class="btn disabled">上一頁</span>
+          <% } %>
+
+          <% for (let i = 1; i <= pages; i++) { %>
+            <a class="btn <%= i === P ? 'primary' : '' %>" href="<%= qs(i) %>">
+              <%= i === P ? ('[' + i + ']') : i %>
+            </a>
+          <% } %>
+
+          <% if (P < pages) { %>
+            <a class="btn" href="<%= qs(P + 1) %>">下一頁</a>
+          <% } else { %>
+            <span class="btn disabled">下一頁</span>
+          <% } %>
+        </nav>
+      <% } %>
+    </section>
+  </main>
+
+  <!-- libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ZachSaucier/Disintegrate/disintegrate.js"></script>
+
+  <!-- app -->
+  <script src="/js/pagefx.js"></script>
+  <script src="/js/wind.js"></script>
 </body>
 </html>
